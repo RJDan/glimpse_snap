@@ -1,28 +1,25 @@
-name: rjd-shapeit
-title: shapeit
-version: '5.1.1'
-summary:   Segmented HAPlotype Estimation and Imputation Tool
+name: rjd-impute
+title: impute
+version: '5v1.2.0'
+summary:   Genotype imputation method 
 description: |
-        "Segmented HAPlotype Estimation and Imputation Tool."
-          *  The description above refers to the software: https://github.com/odelaneau/shapeit5.git
+        "IMPUTE 5 is a genotype imputation method that can scale to reference panels with millions of samples. It achieves fast, accurate, and memory-efficient imputation by selecting haplotypes using the Positional Burrows Wheeler Transform (PBWT)."
+          *  The description above refers to the software: https://jmarchini.org/software/
           * I have packaged the software as a snap for **personal use** but I have made the snap available for free.
-          * I do not maintain the software itself. I only maintain the snap packaging. Please report software bugs to the maintainers.
+          * I   do not maintain the software itself. I only maintain the snap packaging. Please report software bugs to the maintainers.
           * Report snap-specific bugs to me.
-          * I _DO_ use this snap. It _has passed ALL the provided tests_ on my system. I __do not__ track the latest version.
+          * I _DO_ use this snap. It _HAS PASSED ALL THE PROVIDED TESTS_ on my system. I __do not__ track the latest version.
           * Packaging 'style' : binary for linux machines.
           * License refers to the original software, not the snapcraft 'code'.
-          * More info:
           * Run the following to rename the snap
-            ```sudo snap alias rjd-shapeit.ligate ligate```
-            ```sudo snap alias rjd-shapeit.phase-common phase_common```
-            ```sudo snap alias rjd-shapeit.phase-rare phase_rare```
-            ```sudo snap alias rjd-shapeit.simulate simulate```
-            ```sudo snap alias rjd-shapeit.switch switch```
-            ```sudo snap alias rjd-shapeit.xcftools xcftools```
+                ```sudo snap alias rjd-impute.impute5 impute5```
+                ```sudo snap alias rjd-impute.imp5Chunker imp5Chunker```
+                ```sudo snap alias rjd-impute.xcftools xcftools```
+#          * More info:
 
-contact: https://github.com/RJDan/shapeit_snap
-website: https://github.com/RJDan/shapeit_snap
-source-code : https://github.com/RJDan/shapeit_snap
+contact: https://github.com/RJDan/impute_snap
+website: https://github.com/RJDan/impute_snap
+source-code : https://github.com/RJDan/impute_snap
 #icon: Rlogo.png
 
 base: core22 # the base snap is the execution environment for this snap
@@ -33,131 +30,53 @@ architectures:
       - amd64
 
 apps:
-    ligate:
-        command: bin/ligate_static
+    imp5Chunker:
+        command: bin/imp5Chunker
         plugs:
           - home
           - removable-media
-    phase-common:
-        command: bin/phase_common_static
+    xcftools:
+        command: bin/xcftools
         plugs:
           - home
           - removable-media
-    phase-rare:
-        command: bin/phase_rare_static
-        plugs:
-          - home
-          - removable-media
-    simulate:
-        command: bin/simulate_static
-        plugs:
-          - home
-          - removable-media
-    switch:
-        command: bin/switch_static
-        plugs:
-          - home
-          - removable-media
-    xcftools: 
-        command: bin/xcftools_static
+    impute5:
+        command: bin/impute5
         plugs:
           - home
           - removable-media
 
 parts:
-    ligate_static:
-        plugin: nil
+    impute:
+        plugin: dump
+        source: .
         build-packages:
                 - wget
                 - tree
+                - unzip
         override-pull: |
-                    wget https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/ligate_static
+                    wget dl.dropboxusercontent.com/sh/mwnceyhir8yze2j/AABKBCgZsQqz8TlZGo7yXwx6a/impute5_v1.2.0.zip?dl=0
+                    mv impute5_v1.2.0.zip?dl=0 impute5_v1.2.0.zip
+                    unzip impute5_v1.2.0.zip
                     snapcraftctl pull
         override-build: |
-                    mv ligate_static $SNAPCRAFT_PART_INSTALL
-                    chmod +x $SNAPCRAFT_PART_INSTALL/ligate_static
-                    snapcraftctl build
-        organize:
-            ligate_static : bin/
-        stage:
-            - bin
-        prime:
-            - bin
-    phase_common_static:
-        plugin: nil
-        override-pull: |
-                    wget https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/phase_common_static
-                    snapcraftctl pull
-        override-build: |
-                    mv phase_common_static $SNAPCRAFT_PART_INSTALL
-                    chmod +x $SNAPCRAFT_PART_INSTALL/phase_common_static
-                    snapcraftctl build
-        organize:
-            phase_common_static : bin/
-        stage:
-            - bin
-        prime:
-            - bin
-    phase_rare_static:
-        plugin: nil
-        override-pull: |
-                    wget https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/phase_rare_static
-                    snapcraftctl pull
-        override-build: |
-                    mv phase_rare_static $SNAPCRAFT_PART_INSTALL
-                    chmod +x $SNAPCRAFT_PART_INSTALL/phase_rare_static
-                    snapcraftctl build
-        organize:
-            phase_rare_static : bin/
-        stage:
-            - bin
-        prime:
-            - bin
-    simulate_static:
-        plugin: nil
-        override-pull: |
-                    wget https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/simulate_static
-                    snapcraftctl pull
-        override-build: |
-                    mv simulate_static $SNAPCRAFT_PART_INSTALL
-                    chmod +x $SNAPCRAFT_PART_INSTALL/simulate_static
-                    snapcraftctl build
-        organize:
-            simulate_static : bin/
-        stage:
-            - bin
-        prime:
-            - bin
-    switch_static:
-        plugin: nil
-        override-pull: |
-                    wget https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/switch_static
-                    snapcraftctl pull
-        override-build: |
-                    mv switch_static $SNAPCRAFT_PART_INSTALL
-                    chmod +x $SNAPCRAFT_PART_INSTALL/switch_static
-                    snapcraftctl build
-        organize:
-            switch_static : bin/
-        stage:
-            - bin
-        prime:
-            - bin
-    xcftools_static:
-        plugin: nil
-        override-pull: |
-                    wget https://github.com/odelaneau/shapeit5/releases/download/v5.1.1/xcftools_static
-                    snapcraftctl pull
-        override-build: |
-                    mv xcftools_static $SNAPCRAFT_PART_INSTALL
+                    mv impute5_v1.2.0/* $SNAPCRAFT_PART_INSTALL
+                    chmod +x $SNAPCRAFT_PART_INSTALL/imp5Chunker_v1.2.0_static
+                    chmod +x $SNAPCRAFT_PART_INSTALL/impute5_v1.2.0_static 
                     chmod +x $SNAPCRAFT_PART_INSTALL/xcftools_static
                     snapcraftctl build
         organize:
-            xcftools_static : bin/
+            imp5Chunker_v1.2.0_static : bin/imp5Chunker
+            impute5_v1.2.0_static : bin/impute5
+            xcftools_static : bin/xcftools
         stage:
             - bin
+            - test
+            - doc
         prime:
             - bin
+            - doc
+            - test
 
 #            "Icon_230417.svg" : snap/Icon_230417.svg
 #        build-packages:

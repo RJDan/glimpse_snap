@@ -12,4 +12,7 @@ __pycache__
 *_source.tar.bz2
 snap/.snapcraft
 test*
+snap/local
 
+
+*zip
