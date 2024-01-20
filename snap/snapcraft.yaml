@@ -1,26 +1,28 @@
-name: rjd-impute
-title: impute
-version: '5v1.2.0'
-summary:   Genotype imputation method 
+name: rjd-glimpse
+title: glimpse
+version: 'v2.0.0' 
+summary:   Tool for low-coverage whole-genome imputation 
 description: |
-        "IMPUTE 5 is a genotype imputation method that can scale to reference panels with millions of samples. It achieves fast, accurate, and memory-efficient imputation by selecting haplotypes using the Positional Burrows Wheeler Transform (PBWT)."
-          *  The description above refers to the software: https://jmarchini.org/software/
+        "GLIMPSE2 is a set of tools for low-coverage whole genome sequencing imputation. GLIMPSE2 is based on the GLIMPSE model and designed for reference panels containing hundreads of thousands of reference samples, with a special focus on rare variants."
+          *  The description above refers to the software: https://odelaneau.github.io/GLIMPSE/
           * I have packaged the software as a snap for **personal use** but I have made the snap available for free.
           * I   do not maintain the software itself. I only maintain the snap packaging. Please report software bugs to the maintainers.
           * Report snap-specific bugs to me.
           * I _DO_ use this snap. It _HAS PASSED ALL THE PROVIDED TESTS_ on my system. I __do not__ track the latest version.
           * Packaging 'style' : binary for linux machines.
           * License refers to the original software, not the snapcraft 'code'.
-          * Run the following to rename the snap
-                ```sudo snap alias rjd-impute.impute5 impute5```
-                ```sudo snap alias rjd-impute.imp5Chunker imp5Chunker```
-                ```sudo snap alias rjd-impute.xcftools xcftools```
+          * Run the following to rename the snap commands to GLIMPSE2_<command>
+                ```sudo snap alias rjd-glimpse.chunk GLIMPSE2_chunk```
+                ```sudo snap alias rjd-glimpse.concordance GLIMPSE2_concordance```
+                ```sudo snap alias rjd-glimpse.ligate GLIMPSE2_ligate```
+                ```sudo snap alias rjd-glimpse.phase GLIMPSE2_phase```
+                ```sudo snap alias rjd-glimpse.split-reference GLIMPSE2_split_reference```
 #          * More info:
 
-contact: https://github.com/RJDan/impute_snap
-website: https://github.com/RJDan/impute_snap
-source-code : https://github.com/RJDan/impute_snap
-#icon: Rlogo.png
+contact: https://github.com/RJDan/glimpse_snap
+website: https://github.com/RJDan/glimpse_snap
+source-code : https://github.com/RJDan/glimpse_snap
+icon:  Icon_230417.png
 
 base: core22 # the base snap is the execution environment for this snap
 grade: stable # stable, devel
@@ -29,55 +31,70 @@ license:  MIT
 architectures:
       - amd64
 
+  
 apps:
-    imp5Chunker:
-        command: bin/imp5Chunker
+    glimpse-chunk:
+        command: bin/chunk_static
         plugs:
           - home
           - removable-media
-    xcftools:
-        command: bin/xcftools
+    glimpse-concordance:
+        command: bin/concordance_static
         plugs:
           - home
           - removable-media
-    impute5:
-        command: bin/impute5
+    glimpse-ligate:
+        command: bin/ligate_static
+        plugs:
+          - home
+          - removable-media
+    glimpse-phase:
+        command: bin/phase_static
+        plugs:
+          - home
+          - removable-media
+    glimpse-split-reference:
+        command: bin/split_reference_static
         plugs:
           - home
           - removable-media
 
 parts:
-    impute:
+    glimpse:
         plugin: dump
-        source: .
+        source: https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/glimpse_v2.0.0-27-g0919952_20221207.tar.gz
         build-packages:
                 - wget
                 - tree
-                - unzip
+                - tar
         override-pull: |
-                    wget dl.dropboxusercontent.com/sh/mwnceyhir8yze2j/AABKBCgZsQqz8TlZGo7yXwx6a/impute5_v1.2.0.zip?dl=0
-                    mv impute5_v1.2.0.zip?dl=0 impute5_v1.2.0.zip
-                    unzip impute5_v1.2.0.zip
-                    snapcraftctl pull
+                    wget https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_chunk_static
+                    wget https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_concordance_static
+                    wget https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_ligate_static
+                    wget https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_phase_static
+                    wget https://github.com/odelaneau/GLIMPSE/releases/download/v2.0.0/GLIMPSE2_split_reference_static 
+                    craftctl default
         override-build: |
-                    mv impute5_v1.2.0/* $SNAPCRAFT_PART_INSTALL
-                    chmod +x $SNAPCRAFT_PART_INSTALL/imp5Chunker_v1.2.0_static
-                    chmod +x $SNAPCRAFT_PART_INSTALL/impute5_v1.2.0_static 
-                    chmod +x $SNAPCRAFT_PART_INSTALL/xcftools_static
-                    snapcraftctl build
+                    mv GLIMPSE2* $SNAPCRAFT_PART_INSTALL                    
+                    chmod +x $SNAPCRAFT_PART_INSTALL/GLIMPSE2_chunk_static
+                    chmod +x $SNAPCRAFT_PART_INSTALL/GLIMPSE2_concordance_static
+                    chmod +x $SNAPCRAFT_PART_INSTALL/GLIMPSE2_ligate_static
+                    chmod +x $SNAPCRAFT_PART_INSTALL/GLIMPSE2_phase_static
+                    chmod +x $SNAPCRAFT_PART_INSTALL/GLIMPSE2_split_reference_static 
+                    craftctl default
         organize:
-            imp5Chunker_v1.2.0_static : bin/imp5Chunker
-            impute5_v1.2.0_static : bin/impute5
-            xcftools_static : bin/xcftools
+                    GLIMPSE2_chunk_static: bin/chunk_static
+                    GLIMPSE2_concordance_static: bin/concordance_static
+                    GLIMPSE2_ligate_static: bin/ligate_static
+                    GLIMPSE2_phase_static: bin/phase_static
+                    GLIMPSE2_split_reference_static : bin/split_reference_static 
+                    "glimpse_logo_400x171.png" : snap/Icon_230417.png
         stage:
             - bin
-            - test
-            - doc
+            #- test
+            #- doc
         prime:
             - bin
-            - doc
-            - test
+            #- doc
+            #- test
 
-#            "Icon_230417.svg" : snap/Icon_230417.svg
-#        build-packages:
-#        stage-packages:
